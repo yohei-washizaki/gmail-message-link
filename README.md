@@ -15,7 +15,9 @@ Gmail API thread id: 1234567890abcdef
 thread: thread-f:1311768467294899695
 ```
 
-(Sample values. The labels and messages are in Japanese.)
+(Sample values. The labels, menu and status messages are in Japanese.)
+
+The subject and sender let you, and the agent, check that it opened the right message.
 
 Paste this into an AI agent that has a Gmail connector and ask about "this message". Both the hex IDs and the `msg-f:` / `msg-a:` forms worked with the Gmail connector's `get_message` (checked 2026-10-17). A bare decimal number without the `msg-f:` prefix did not.
 
@@ -38,7 +40,9 @@ The extension is not on the Chrome Web Store. Load it unpacked:
 - `clipboardWrite`: to copy the IDs.
 - `contextMenus`: for the right-click menu.
 
-The extension only reads attributes Gmail already puts in the page (`data-message-id`, `data-legacy-message-id`, `data-thread-perm-id`, `data-legacy-thread-id`). It makes no network requests and does not use Gmail OAuth.
+The extension reads only what Gmail already shows in the page: the IDs in Gmail's attributes (`data-message-id`, `data-legacy-message-id`, `data-thread-perm-id`, `data-legacy-thread-id`), the thread's subject, and the sender's name and address. It does not read message bodies. It makes no network requests, does not use Gmail OAuth, and does not log Gmail URLs or message data.
+
+The copied text includes the subject and sender, so pasting it shares them with wherever you paste it. The IDs are email metadata too: an agent with authorized Gmail access can use them to retrieve the message.
 
 ## Limitations
 

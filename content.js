@@ -1,6 +1,5 @@
 // Runs inside the Gmail page (mail.google.com), in an isolated world:
 // it shares the DOM with Gmail but not Gmail's JavaScript variables.
-console.log("[gmail-message-link] content script loaded:", location.href);
 
 // Attribute names confirmed in DevTools on 2026-10-17:
 //   open thread:  h2[data-thread-perm-id="thread-f:<decimal>"][data-legacy-thread-id="<hex>"]
