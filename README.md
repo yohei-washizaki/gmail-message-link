@@ -9,10 +9,10 @@ The URL in Gmail's address bar (`#inbox/FMfcgz...`) only works in Gmail's web UI
 ```text
 件名: 【サンプル】ご注文ありがとうございます
 差出人: shop@example.com <shop@example.com>
-Gmail API message id: 19f3c2a8b4d5e6f7
-permmsgid: msg-f:1870052300133099255
-Gmail API thread id: 19f3c2a8b4d5e6f7
-thread: thread-f:1870052300133099255
+Gmail API message id: 1234567890abcdef
+permmsgid: msg-f:1311768467294899695
+Gmail API thread id: 1234567890abcdef
+thread: thread-f:1311768467294899695
 ```
 
 (Sample values. The labels and messages are in Japanese.)
