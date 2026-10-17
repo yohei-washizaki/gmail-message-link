@@ -7,15 +7,13 @@ The URL in Gmail's address bar (`#inbox/FMfcgz...`) only works in Gmail's web UI
 ## What it copies
 
 ```text
-件名: 【サンプル】ご注文ありがとうございます
-差出人: shop@example.com <shop@example.com>
 Gmail API message id: 1234567890abcdef
 permmsgid: msg-f:1311768467294899695
 Gmail API thread id: 1234567890abcdef
 thread: thread-f:1311768467294899695
 ```
 
-(Sample values. The labels and messages are in Japanese.)
+(Sample values. The extension's menu and status messages are in Japanese.)
 
 Paste this into an AI agent that has a Gmail connector and ask about "this message". Both the hex IDs and the `msg-f:` / `msg-a:` forms worked with the Gmail connector's `get_message` (checked 2026-10-17). A bare decimal number without the `msg-f:` prefix did not.
 
@@ -39,6 +37,8 @@ The extension is not on the Chrome Web Store. Load it unpacked:
 - `contextMenus`: for the right-click menu.
 
 The extension only reads attributes Gmail already puts in the page (`data-message-id`, `data-legacy-message-id`, `data-thread-perm-id`, `data-legacy-thread-id`). It makes no network requests and does not use Gmail OAuth.
+
+Only message and thread IDs are copied. The extension does not read or copy subjects, sender names, sender email addresses, or message bodies, and does not log Gmail URLs. IDs are still email metadata: pasting them into an AI agent shares them with that service, and an agent with authorized Gmail access can use them to retrieve the message.
 
 ## Limitations
 

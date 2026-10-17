@@ -1,6 +1,5 @@
 // Runs inside the Gmail page (mail.google.com), in an isolated world:
 // it shares the DOM with Gmail but not Gmail's JavaScript variables.
-console.log("[gmail-message-link] content script loaded:", location.href);
 
 // Attribute names confirmed in DevTools on 2026-10-17:
 //   open thread:  h2[data-thread-perm-id="thread-f:<decimal>"][data-legacy-thread-id="<hex>"]
@@ -14,17 +13,9 @@ function isShown(el) {
   return el.checkVisibility();
 }
 
-// Not yet confirmed in DevTools for every view: the sender is assumed to be a span with an email attribute.
-function readSender(root) {
-  const sender = root.querySelector("span[email]");
-  return sender ? `${sender.getAttribute("name")} <${sender.getAttribute("email")}>` : null;
-}
-
 function fromMessage(message) {
   const heading = [...document.querySelectorAll("h2[data-thread-perm-id]")].find(isShown);
   return {
-    subject: heading?.textContent.trim() ?? null,
-    from: readSender(message),
     messageId: message.dataset.legacyMessageId,
     messagePermId: message.dataset.messageId.replace(/^#/, ""),
     threadId: heading?.dataset.legacyThreadId ?? null,
@@ -47,8 +38,6 @@ function readClickedMessage(target) {
 
 function format(info) {
   return [
-    `件名: ${info.subject ?? "(取得できず)"}`,
-    `差出人: ${info.from ?? "(取得できず)"}`,
     `Gmail API message id: ${info.messageId}`,
     `permmsgid: ${info.messagePermId}`,
     `Gmail API thread id: ${info.threadId ?? "(取得できず)"}`,
