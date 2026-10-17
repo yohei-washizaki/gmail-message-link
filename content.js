@@ -5,18 +5,13 @@ console.log("[gmail-message-link] content script loaded:", location.href);
 // Attribute names confirmed in DevTools on 2026-10-17:
 //   open thread:  h2[data-thread-perm-id="thread-f:<decimal>"][data-legacy-thread-id="<hex>"]
 //   open message: div[data-message-id="#msg-f:<decimal>"][data-legacy-message-id="<hex>"]
-//   list row:     span[data-thread-id="#thread-f:<decimal>"][data-legacy-thread-id="<hex>"]
-//                     [data-legacy-last-message-id="<hex>"]
+// Messages you sent carry "#msg-a:r<decimal>" instead (seen 2026-10-17); that
+// number does not match the hex id, but the Gmail connector accepts both.
 
 // Gmail keeps hidden views (e.g. the inbox list) in the DOM,
 // so only elements that are actually shown count.
 function isShown(el) {
   return el.checkVisibility();
-}
-
-// The Gmail API id is the msg-f / thread-f number written in hex.
-function hexToPermNumber(hex) {
-  return BigInt(`0x${hex}`).toString();
 }
 
 // Not yet confirmed in DevTools for every view: the sender is assumed to be a span with an email attribute.
@@ -37,35 +32,17 @@ function fromMessage(message) {
   };
 }
 
-// A row in the message list stands for a whole thread; its message id is the
-// thread's latest message. Not yet confirmed: the row is a <tr> and the span
-// holding the ids also holds the subject text.
-function fromListRow(row) {
-  const ids = row.querySelector("span[data-legacy-thread-id]");
-  if (!ids) return null;
-  const messageId = ids.dataset.legacyLastMessageId;
-  return {
-    subject: ids.textContent.trim(),
-    from: readSender(row),
-    messageId,
-    messagePermId: `msg-f:${hexToPermNumber(messageId)}`,
-    threadId: ids.dataset.legacyThreadId,
-    threadPermId: ids.dataset.threadId.replace(/^#/, ""),
-  };
-}
-
 // With an open thread, take the last shown message (usually the newest).
 function readOpenMessage() {
   const message = [...document.querySelectorAll("div[data-message-id]")].filter(isShown).at(-1);
   return message ? fromMessage(message) : null;
 }
 
-// The message (or list row) under the mouse when the context menu was opened.
+// The message under the mouse when the context menu was opened.
+// List rows are not handled: Gmail shows its own menu there, so ours never appears (2026-10-17).
 function readClickedMessage(target) {
   const message = target?.closest("div[data-message-id]");
-  if (message) return fromMessage(message);
-  const row = target?.closest("tr");
-  return (row && fromListRow(row)) ?? readOpenMessage();
+  return message ? fromMessage(message) : readOpenMessage();
 }
 
 function format(info) {
